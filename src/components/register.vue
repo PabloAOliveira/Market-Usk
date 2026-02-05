@@ -20,10 +20,10 @@
         <v-form :ref="controller.formRef">
           <v-text-field
             label="Nome"
-            type="email"
-            v-model="controller.nameRegister.value"
+            type="text"
+            v-model="controller.registerModel.value.name"
             required
-            prepend-inner-icon="mdi-email"
+            prepend-inner-icon="mdi-account"
             variant="outlined"
             density="comfortable"
             class="mb-4"
@@ -33,23 +33,42 @@
           <v-text-field
             label="Email"
             type="email"
-            v-model="controller.emailRegister.value"
+            v-model="controller.registerModel.value.email"
             required
-            prepend-inner-icon="mdi-lock"
+            prepend-inner-icon="mdi-email"
             variant="outlined"
             density="comfortable"
-            :rules="[controller.regras.required]"
+            class="mb-4"
+            :rules="[controller.regras.required, controller.regras.validEmail]"
           ></v-text-field>
 
           <v-text-field
             label="Senha"
-            type="password"
-            v-model="controller.passwordRegister.value"
+            :type="controller.registerModel.value.showPassword ? 'text' : 'password'"
+            v-model="controller.registerModel.value.password"
             required
             prepend-inner-icon="mdi-lock"
+            :append-inner-icon="controller.registerModel.value.showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+            :append-inner-icon-color="controller.registerModel.value.showPassword ? 'primary' : 'grey'"
+            @click:append-inner="controller.registerModel.value.showPassword = !controller.registerModel.value.showPassword"
             variant="outlined"
-            density="comfortable" 
+            density="comfortable"
+            class="mb-4"
             :rules="[controller.regras.required]"
+          ></v-text-field>
+
+          <v-text-field
+            label="Confirmar Senha"
+            :type="controller.registerModel.value.showPassword ? 'text' : 'password'"
+            v-model="controller.registerModel.value.confirmPassword"
+            required
+            prepend-inner-icon="mdi-lock-check"
+            :append-inner-icon="controller.registerModel.value.showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+            :append-inner-icon-color="controller.registerModel.value.showPassword ? 'primary' : 'grey'"
+            @click:append-inner="controller.registerModel.value.showPassword = !controller.registerModel.value.showPassword"
+            variant="outlined"
+            density="comfortable"
+            :rules="[controller.regras.required, controller.regras.passwordsMatch]"
           ></v-text-field>
         </v-form>
       </v-card-text>
@@ -62,6 +81,8 @@
           size="large"
           variant="elevated"
           class="mb-3"
+          @click="controller.registerUser"
+          :loading="controller.carregandoRegister.value"
         >
           Criar conta
         </v-btn>

@@ -21,7 +21,7 @@
           <v-text-field
             label="Email"
             type="email"
-            v-model="controller.email.value"
+            v-model="controller.loginModel.value.email"
             required
             prepend-inner-icon="mdi-email"
             variant="outlined"
@@ -32,13 +32,13 @@
 
           <v-text-field
             label="Password"
-            :type="controller.showPassword.value ? 'text' : 'password'"
-            v-model="controller.password.value"
+            :type="controller.loginModel.value.showPassword ? 'text' : 'password'"
+            v-model="controller.loginModel.value.password"
             required
             prepend-inner-icon="mdi-lock"
-            :append-inner-icon="controller.showPassword.value ? 'mdi-eye' : 'mdi-eye-off'"
-            :append-inner-icon-color="controller.showPassword.value ? 'primary' : 'grey'"
-            @click:append-inner="controller.showPassword.value = !controller.showPassword.value"
+            :append-inner-icon="controller.loginModel.value.showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+            :append-inner-icon-color="controller.loginModel.value.showPassword ? 'primary' : 'grey'"
+            @click:append-inner="controller.loginModel.value.showPassword = !controller.loginModel.value.showPassword"
             variant="outlined"
             density="comfortable"
             :rules="[controller.regras.required]"
@@ -55,6 +55,7 @@
           variant="elevated"
           class="mb-3"
           @click="controller.login"
+          :loading="controller.carregandoLogin.value"
         >
           Login
         </v-btn>
