@@ -2,14 +2,17 @@ import { createRouter, createWebHistory } from "vue-router";
 import Login from "@/components/login.vue";
 import Register from "@/components/register.vue";
 import Home from "@/components/home.vue";
+import Apresentacao from "@/components/apresentacao.vue";
 import { getAuth } from 'firebase/auth'
 import firebaseApp from '@/firebase'
 
 const routes = [
+  { path: "/", component: Apresentacao },
+  { path: "/apresentacao", component: Apresentacao },
   { path: "/login", component: Login, meta: { requiresGuest: true } },
   { path: "/register", component: Register, meta: { requiresGuest: true } },
   { path: "/home", component: Home, meta: { requiresAuth: true } },
-  { path: "/:pathMatch(.*)*", redirect: "/login" },
+  { path: "/:pathMatch(.*)*", redirect: "/" },
 ];
 
 const router = createRouter({
