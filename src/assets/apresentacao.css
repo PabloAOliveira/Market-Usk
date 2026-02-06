@@ -30,8 +30,17 @@
   --cc-radius-xl: 28px;
 }
 
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+body {
   overflow-x: hidden;
 }
 
@@ -54,6 +63,11 @@ html {
 ::selection {
   background: rgba(0, 212, 255, 0.3);
   color: #fff;
+}
+
+/* ── Performance Optimizations ───────────────────────── */
+.orb, .rain-column, .status-dot, .typewriter-cursor, .scroll-dot {
+  will-change: transform, opacity;
 }
 
 /* ── Keyframes ───────────────────────────────────────── */

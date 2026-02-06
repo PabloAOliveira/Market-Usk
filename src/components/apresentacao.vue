@@ -533,19 +533,29 @@ function scrollTo(id) {
   document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
 }
 
-function handleScroll() {
-  scrolled.value = window.scrollY > 50
+let ticking = false
 
-  const sections = ['pricing', 'stats', 'features', 'hero']
-  for (const id of sections) {
-    const el = document.getElementById(id)
-    if (el) {
-      const rect = el.getBoundingClientRect()
-      if (rect.top <= 200) {
-        activeSection.value = id
-        break
+function handleScroll() {
+  if (!ticking) {
+    window.requestAnimationFrame(() => {
+      scrolled.value = window.scrollY > 50
+
+      const sections = ['pricing', 'stats', 'features', 'hero']
+      for (const id of sections) {
+        const el = document.getElementById(id)
+        if (el) {
+          const rect = el.getBoundingClientRect()
+          if (rect.top <= 200) {
+            activeSection.value = id
+            break
+          }
+        }
       }
-    }
+      
+      ticking = false
+    })
+    
+    ticking = true
   }
 }
 
@@ -566,16 +576,22 @@ onMounted(() => {
 
   timeout = setTimeout(typeEffect, 1000)
 
-  // Setup reveal animations
+  // Setup reveal animations with better performance
   revealObserver = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          entry.target.classList.add('visible')
+          // Usar requestAnimationFrame para melhor performance
+          requestAnimationFrame(() => {
+            entry.target.classList.add('visible')
+          })
         }
       })
     },
-    { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
+    { 
+      threshold: 0.1, 
+      rootMargin: '0px 0px -40px 0px'
+    }
   )
 
   setTimeout(() => {
@@ -642,12 +658,14 @@ onUnmounted(() => {
   background: transparent !important;
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
   border-bottom: 1px solid transparent !important;
+  will-change: background, border-color, backdrop-filter;
 }
 .navbar-scrolled {
   background: rgba(5, 8, 16, 0.85) !important;
   backdrop-filter: blur(20px) !important;
   -webkit-backdrop-filter: blur(20px) !important;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+  will-change: auto;
 }
 
 .navbar-logo {
@@ -992,6 +1010,7 @@ onUnmounted(() => {
   border: var(--cc-border-glass);
   border-radius: var(--cc-radius-lg);
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
 }
 .glass-card:hover {
   background: var(--cc-bg-glass-hover);
@@ -1250,10 +1269,12 @@ onUnmounted(() => {
   transform: translateY(40px);
   transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
               transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
 }
 .reveal.visible {
   opacity: 1;
   transform: translateY(0);
+  will-change: auto;
 }
 
 .reveal-scale {
@@ -1261,10 +1282,12 @@ onUnmounted(() => {
   transform: scale(0.85);
   transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
               transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
 }
 .reveal-scale.visible {
   opacity: 1;
   transform: scale(1);
+  will-change: auto;
 }
 
 /* ── Utilities ───────────────────────────────────────── */
